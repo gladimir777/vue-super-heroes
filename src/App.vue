@@ -1,19 +1,105 @@
 <template>
   <div id="app">
-    <img alt="Vue logo" src="./assets/logo.png">
-    <HelloWorld msg="Welcome to Your Vue.js App"/>
+    <Alert v-bind:error="error" v-bind:msg="msg" />
+    <Search v-on:search-heroe="handleSearch" />
+    <SuperHeroes v-bind:heroes="heroes" />
+    <!-- Comment <Todos v-bind:todos="todos" v-on:del-todo="deleteTodo" /> -->
+    <!-- <AddItem v-on:add-item="addTodo" />}-->
   </div>
 </template>
 
 <script>
-import HelloWorld from './components/HelloWorld.vue'
+import axios from "axios";
+import SuperHeroes from "./components/SuperHeroes";
+import Alert from "./components/Alert";
+import Search from "./components/Search";
+//import Todos from "./components/Todos";
+
+//import AddItem from "./components/AddItem";
 
 export default {
-  name: 'App',
+  name: "App",
   components: {
-    HelloWorld
-  }
-}
+    SuperHeroes,
+    Alert,
+    Search,
+    // Todos,
+    // AddItem,
+  },
+
+  data: () => {
+    return {
+      heroes: [],
+      error: false,
+      msg: "",
+    };
+  },
+
+  methods: {
+    deleteTodo(id) {
+      this.todos = this.todos.filter((t) => t.id !== id);
+    },
+
+    addTodo(newItem) {
+      this.todos = [...this.todos, newItem];
+    },
+
+    handleSearch(name) {
+      const test = this.heroes.filter((item) =>
+        item.nombre.name.toLowerCase().includes(name.toLowerCase())
+      );
+      this.heroes = test;
+    },
+
+    getHeroes() {
+      axios
+        .get(
+          `http://157.245.138.232:9091/api/v1/test/superheroes/?puedeVolar =true`
+        )
+        .then((res) => res.data)
+        .then((res) => {
+          if (res.data.length == 0) {
+            this.error = true;
+            this.msg = `No hay datos`;
+          }
+          this.heroes = res.data;
+          console.log("data", res.data);
+        })
+        .catch((err) => {
+          console.log("Error", err);
+          this.error = true;
+          this.msg = `Erorr`;
+          this.$emit("fetch-error", this.error);
+        });
+    },
+    getHeroe(id) {
+      axios
+        .get(`http://157.245.138.232:9091/api/v1/test/superheroes/${id}`)
+        .then((res) => res.data)
+        .then((res) => {
+          if (res.data.length == 0) {
+            this.msg = `No encuentro El usuario id ${id}`;
+            this.error = true;
+            return;
+          }
+          this.heroes = [...this.heroes, res.data];
+
+          console.log("data", res.data);
+        })
+        .catch((err) => {
+          console.log("Error", err);
+          this.error = true;
+          this.msg = `Erorr`;
+          this.$emit("fetch-error", this.error);
+        });
+    },
+  },
+
+  created() {
+    this.getHeroes();
+    this.getHeroe(1);
+  },
+};
 </script>
 
 <style>
@@ -21,8 +107,10 @@ export default {
   font-family: Avenir, Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  text-align: center;
   color: #2c3e50;
   margin-top: 60px;
+  display: flex;
+  align-items: center;
+  flex-direction: column;
 }
 </style>
