@@ -21,8 +21,6 @@ export default {
 
   methods: {
     handleSearch() {
-      console.log("test", this.name);
-
       this.$emit("search-heroe", this.name);
     },
   },

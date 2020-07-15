@@ -3,8 +3,6 @@
     <Alert v-bind:error="error" v-bind:msg="msg" />
     <Search v-on:search-heroe="handleSearch" />
     <SuperHeroes v-bind:heroes="heroes" />
-    <!-- Comment <Todos v-bind:todos="todos" v-on:del-todo="deleteTodo" /> -->
-    <!-- <AddItem v-on:add-item="addTodo" />}-->
   </div>
 </template>
 
@@ -13,9 +11,6 @@ import axios from "axios";
 import SuperHeroes from "./components/SuperHeroes";
 import Alert from "./components/Alert";
 import Search from "./components/Search";
-//import Todos from "./components/Todos";
-
-//import AddItem from "./components/AddItem";
 
 export default {
   name: "App",
@@ -23,8 +18,6 @@ export default {
     SuperHeroes,
     Alert,
     Search,
-    // Todos,
-    // AddItem,
   },
 
   data: () => {
@@ -63,7 +56,6 @@ export default {
             this.msg = `No hay datos`;
           }
           this.heroes = res.data;
-          console.log("data", res.data);
         })
         .catch((err) => {
           console.log("Error", err);
@@ -83,8 +75,6 @@ export default {
             return;
           }
           this.heroes = [...this.heroes, res.data];
-
-          console.log("data", res.data);
         })
         .catch((err) => {
           console.log("Error", err);
