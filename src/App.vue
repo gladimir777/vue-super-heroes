@@ -29,14 +29,6 @@ export default {
   },
 
   methods: {
-    deleteTodo(id) {
-      this.todos = this.todos.filter((t) => t.id !== id);
-    },
-
-    addTodo(newItem) {
-      this.todos = [...this.todos, newItem];
-    },
-
     handleSearch(name) {
       const test = this.heroes.filter((item) =>
         item.nombre.name.toLowerCase().includes(name.toLowerCase())
